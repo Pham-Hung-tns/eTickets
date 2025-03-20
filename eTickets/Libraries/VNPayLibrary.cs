@@ -53,32 +53,44 @@ namespace eTickets.Libraries
         }
 
 
+        //public string GetIpAddress(HttpContext context)
+        //{
+        //    var ipAddress = string.Empty;
+        //    try
+        //    {
+        //        var remoteIpAddress = context.Connection.RemoteIpAddress;
+
+        //        if (remoteIpAddress != null)
+        //        {
+        //            if (remoteIpAddress.AddressFamily == AddressFamily.InterNetworkV6)
+        //            {
+        //                remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList
+        //                    .FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
+        //            }
+
+        //            if (remoteIpAddress != null) ipAddress = remoteIpAddress.ToString();
+
+        //            return ipAddress;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return ex.Message;
+        //    }
+
+        //    return "127.0.0.1";
+        //}
         public string GetIpAddress(HttpContext context)
         {
-            var ipAddress = string.Empty;
-            try
+            var ip = context.Connection.RemoteIpAddress?.ToString();
+
+            // Chuyển đổi localhost IPv6 (::1) thành IPv4
+            if (string.IsNullOrEmpty(ip) || ip == "::1")
             {
-                var remoteIpAddress = context.Connection.RemoteIpAddress;
-
-                if (remoteIpAddress != null)
-                {
-                    if (remoteIpAddress.AddressFamily == AddressFamily.InterNetworkV6)
-                    {
-                        remoteIpAddress = Dns.GetHostEntry(remoteIpAddress).AddressList
-                            .FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
-                    }
-
-                    if (remoteIpAddress != null) ipAddress = remoteIpAddress.ToString();
-
-                    return ipAddress;
-                }
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
+                ip = "127.0.0.1";
             }
 
-            return "127.0.0.1";
+            return ip;
         }
 
         public void AddRequestData(string key, string value)

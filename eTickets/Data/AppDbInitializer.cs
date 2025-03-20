@@ -136,6 +136,15 @@ namespace eTickets.Data
                     });
                     context.SaveChanges();
                 }
+                //if (context.Movies.Any())
+                //{
+                  
+                //        context.ShoppingCartItems.RemoveRange(context.ShoppingCartItems);
+                //        context.SaveChanges();
+
+                //    context.Movies.RemoveRange(context.Movies);
+                //    context.SaveChanges();
+                //}
                 //Movies
                 if (!context.Movies.Any())
                 {
@@ -219,104 +228,47 @@ namespace eTickets.Data
                 //Actors & Movies
                 if (!context.Actors_Movies.Any())
                 {
-                    context.Actors_Movies.AddRange(new List<Actor_Movie>()
+                    // Lấy danh sách các MovieId đã có trong database
+                    var existingMovieIds = context.Movies.Select(m => m.Id).ToHashSet();
+                    var existingActorIds = context.Actors.Select(a => a.Id).ToHashSet();
+
+                    var actorMovies = new List<Actor_Movie>
+    {
+        new Actor_Movie() { ActorId = 1, MovieId = 1 },
+        new Actor_Movie() { ActorId = 3, MovieId = 1 },
+        new Actor_Movie() { ActorId = 1, MovieId = 2 },
+        new Actor_Movie() { ActorId = 4, MovieId = 2 },
+        new Actor_Movie() { ActorId = 1, MovieId = 3 },
+        new Actor_Movie() { ActorId = 2, MovieId = 3 },
+        new Actor_Movie() { ActorId = 5, MovieId = 3 },
+        new Actor_Movie() { ActorId = 2, MovieId = 4 },
+        new Actor_Movie() { ActorId = 3, MovieId = 4 },
+        new Actor_Movie() { ActorId = 4, MovieId = 4 },
+        new Actor_Movie() { ActorId = 2, MovieId = 5 },
+        new Actor_Movie() { ActorId = 3, MovieId = 5 },
+        new Actor_Movie() { ActorId = 4, MovieId = 5 },
+        new Actor_Movie() { ActorId = 5, MovieId = 5 },
+        new Actor_Movie() { ActorId = 3, MovieId = 6 },
+        new Actor_Movie() { ActorId = 4, MovieId = 6 },
+        new Actor_Movie() { ActorId = 5, MovieId = 6 }
+    };
+
+                    // Lọc ra những Actor_Movie hợp lệ (có MovieId và ActorId tồn tại)
+                    var validActorMovies = actorMovies
+                        .Where(am => existingMovieIds.Contains(am.MovieId) && existingActorIds.Contains(am.ActorId))
+                        .ToList();
+
+                    if (validActorMovies.Any())
                     {
-                        new Actor_Movie()
-                        {
-                            ActorId = 1,
-                            MovieId = 1
-                        },
-                        new Actor_Movie()
-                        {
-                            ActorId = 3,
-                            MovieId = 1
-                        },
-
-                         new Actor_Movie()
-                        {
-                            ActorId = 1,
-                            MovieId = 2
-                        },
-                         new Actor_Movie()
-                        {
-                            ActorId = 4,
-                            MovieId = 2
-                        },
-
-                        new Actor_Movie()
-                        {
-                            ActorId = 1,
-                            MovieId = 3
-                        },
-                        new Actor_Movie()
-                        {
-                            ActorId = 2,
-                            MovieId = 3
-                        },
-                        new Actor_Movie()
-                        {
-                            ActorId = 5,
-                            MovieId = 3
-                        },
-
-
-                        new Actor_Movie()
-                        {
-                            ActorId = 2,
-                            MovieId = 4
-                        },
-                        new Actor_Movie()
-                        {
-                            ActorId = 3,
-                            MovieId = 4
-                        },
-                        new Actor_Movie()
-                        {
-                            ActorId = 4,
-                            MovieId = 4
-                        },
-
-
-                        new Actor_Movie()
-                        {
-                            ActorId = 2,
-                            MovieId = 5
-                        },
-                        new Actor_Movie()
-                        {
-                            ActorId = 3,
-                            MovieId = 5
-                        },
-                        new Actor_Movie()
-                        {
-                            ActorId = 4,
-                            MovieId = 5
-                        },
-                        new Actor_Movie()
-                        {
-                            ActorId = 5,
-                            MovieId = 5
-                        },
-
-
-                        new Actor_Movie()
-                        {
-                            ActorId = 3,
-                            MovieId = 6
-                        },
-                        new Actor_Movie()
-                        {
-                            ActorId = 4,
-                            MovieId = 6
-                        },
-                        new Actor_Movie()
-                        {
-                            ActorId = 5,
-                            MovieId = 6
-                        },
-                    });
-                    context.SaveChanges();
+                        context.Actors_Movies.AddRange(validActorMovies);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Không có Actor_Movie nào hợp lệ để thêm vào database.");
+                    }
                 }
+
             }
 
         }

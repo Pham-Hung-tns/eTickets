@@ -2,8 +2,10 @@
     <button id="vnpay-button" class="btn btn-primary">Thanh toán qua VNPay</button>
 </div>
 
+
+
 <script>
-    document.getElementById("vnpay-button").addEventListener("click", async function() {
+        document.getElementById("vnpay-button").addEventListener("click", async function () {
         try {
             const response = await fetch("@Url.Action("CreatePaymentUrlVnpay", "VNPay")", {
                 method: "POST",
@@ -11,16 +13,16 @@
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    amount: @Json.Serialize(ViewBag.TotalAmount), // Lấy từ ViewBag
-                    orderType: "billpayment",
-                    orderDescription: "Thanh toán đơn hàng",
-                    name: "Khách hàng"
+                    Amount: 10000, // Lấy từ ViewBag hoặc giá trị động
+                    OrderType: "order",
+                    OrderDescription: "Thanh toán đơn hàng",
+                    Name: "Khách hàng"
                 })
             });
 
             const result = await response.json();
             if (result.url) {
-                window.location.href = result.url;
+                window.location.href = result.url; // Chuyển hướng đến trang thanh toán
             } else {
                 alert("Không thể tạo URL thanh toán!");
             }

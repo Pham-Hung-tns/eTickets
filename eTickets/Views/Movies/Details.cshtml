@@ -2,8 +2,8 @@
 
 @{
     ViewData["Title"] = "Movie details";
+    
 }
-
 <div class="row">
     <div class="col-md-8 offset-2">
         <div class="card mb-12">
@@ -75,6 +75,9 @@
                         <p class="card-text">
                             <a class="btn btn-outline-primary float-right" asp-action="Index">
                                 Back to List
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=@ViewBag.MovieUrl" class="btn btn-danger btn-md my-0 p" target="_blank">
+                                Share on Facebook
                             </a>
                             <a class="btn btn-success text-white  @((DateTime.Now > Model.EndDate) ? "disabled" : "")" 
                                asp-controller="Orders" 

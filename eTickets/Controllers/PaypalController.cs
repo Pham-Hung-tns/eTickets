@@ -34,6 +34,7 @@ namespace eTickets.Controllers
         }
         public IActionResult Index()
         {
+            // truyền các tham số vào ViewBag
             ViewBag.PayPalClientID = PayPalClientID;
             ViewBag.PayPalSecret = PayPalSecret;
             ViewBag.PayPalUrl = PayPalUrl;
